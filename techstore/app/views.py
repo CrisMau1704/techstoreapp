@@ -30,15 +30,6 @@ from . import appbuilder
     )
 """
 
-
-class UsuarioView(ModelView):
-    datamodel = SQLAInterface(Usuario)
-    list_columns = ["username", "password", "nombre", "rol", "estado"]
-    add_columns = list_columns
-    edit_columns = list_columns
-    show_columns = list_columns
-
-
 class PacienteView(ModelView):
     datamodel = SQLAInterface(Paciente)
     list_columns = ["nombre_completo", "ci", "telefono", "edad", "direccion", "correo", "estado", "creado_en", "actualizado_en"]

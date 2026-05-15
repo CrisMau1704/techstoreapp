@@ -11,18 +11,7 @@ AuditMixin will add automatic timestamp of created and modified by who
 
 
 """
-class Usuario(Model):
-    __tablename__= "usuario"
 
-    id = Column(Integer, primary_key=true)
-    username = Column(String(150), nullable=False)
-    password = Column(String(150), nullable=False)
-    nombre = Column(String(150), nullable=False)
-    rol = Column(String(150))
-    estado = Column(Boolean, default=True)
-
-    def __repr__(self):
-        return self.username
 
 class Paciente(Model):
     __tablename__= "paciente"
