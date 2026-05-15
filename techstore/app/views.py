@@ -36,6 +36,13 @@ class PacienteView(ModelView):
     add_columns = list_columns
     edit_columns = list_columns
     show_columns = list_columns
+
+appbuilder.add_view(
+    PacienteView,
+    "Pacientes",
+    icon="wheelchair-alt",
+    category="Gestión Médica"
+)    
 """
     Application wide 404 error handler
 """
