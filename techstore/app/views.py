@@ -1,5 +1,7 @@
 from flask import current_app, render_template
-
+from flask_appbuilder.models.sqla.interface import SQLAInterface
+from .models import Usuario, Paciente
+from . import appbuilder
 """
     Create your Model based REST API::
 
@@ -28,6 +30,19 @@ from flask import current_app, render_template
     )
 """
 
+class PacienteView(ModelView):
+    datamodel = SQLAInterface(Paciente)
+    list_columns = ["nombre_completo", "ci", "telefono", "edad", "direccion", "correo", "estado", "creado_en", "actualizado_en"]
+    add_columns = list_columns
+    edit_columns = list_columns
+    show_columns = list_columns
+
+appbuilder.add_view(
+    PacienteView,
+    "Pacientes",
+    icon="wheelchair-alt",
+    category="Gestión Médica"
+)    
 """
     Application wide 404 error handler
 """
