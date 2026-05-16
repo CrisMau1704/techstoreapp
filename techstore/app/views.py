@@ -14,8 +14,8 @@ class DoctorView(ModelView):
 
 class TratamientoView(ModelView):
     datamodel = SQLAInterface(Tratamiento)
-    list_columns = ["nombre", "descripcion", "precio", "duracion_minutos", "estado"]
-    add_columns = list_columns
+    list_columns = ["nombre", "descripcion", "precio", "duracion_minutos", "doctor", "estado"]
+    add_columns = ["nombre", "descripcion", "precio", "duracion_minutos", "doctor", "estado"]
     edit_columns = list_columns
     show_columns = list_columns
 

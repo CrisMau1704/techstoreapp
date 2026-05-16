@@ -1,6 +1,7 @@
 from flask_appbuilder import Model
 from flask_appbuilder.models.mixins import ImageColumn
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float, Text, ForeignKey
+from sqlalchemy.orm import relationship
 from datetime import datetime
 
 class Doctor(Model):
@@ -20,7 +21,7 @@ class Doctor(Model):
         return self.nombre_completo
 
 
-from sqlalchemy import Float, Text
+# from sqlalchemy import Float, Text
 
 class Tratamiento(Model):
     __tablename__ = "tratamiento"  # 🔹 Nombre de la tabla en la BD
@@ -33,6 +34,10 @@ class Tratamiento(Model):
     estado = Column(Boolean, default=True)
     creado_en = Column(DateTime, default=datetime.now)
     actualizado_en = Column(DateTime, onupdate=datetime.now)
+
+    # 🔹 Relación con Doctor
+    doctor_id = Column(Integer, ForeignKey("doctor.id"), nullable=False)
+    doctor = relationship("Doctor")
 
     def __repr__(self):
         return self.nombre
