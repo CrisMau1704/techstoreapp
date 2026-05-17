@@ -91,7 +91,7 @@ class TratamientoView(ModelView):
 
 
 # =========================
-# CITAS - VERSIÓN CORREGIDA
+# CITAS - VERSIÓN CORREGIDAssss
 # =========================
 
 def obtener_horarios_disponibles():
