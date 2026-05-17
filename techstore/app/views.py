@@ -1,4 +1,3 @@
-
 from flask_appbuilder import ModelView, BaseView, expose
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_appbuilder.fieldwidgets import Select2Widget
@@ -8,7 +7,6 @@ from datetime import datetime
 
 from .models import Paciente, Doctor, Tratamiento, Cita, Pago, EstadoCita
 from . import appbuilder, db
-
 
 # =========================
 # PACIENTES
@@ -93,8 +91,27 @@ class TratamientoView(ModelView):
 
 
 # =========================
-# CITAS
+# CITAS - VERSIÓN CORREGIDAssss
 # =========================
+
+def obtener_horarios_disponibles():
+    """
+    Función que retorna los horarios disponibles
+    """
+    horarios_base = [
+        ("08:00", "08:00 AM"),
+        ("09:00", "09:00 AM"),
+        ("10:00", "10:00 AM"),
+        ("11:00", "11:00 AM"),
+        ("12:00", "12:00 PM"),
+        ("14:00", "02:00 PM"),
+        ("15:00", "03:00 PM"),
+        ("16:00", "04:00 PM"),
+        ("17:00", "05:00 PM"),
+    ]
+    
+    return horarios_base
+
 
 class CitaView(ModelView):
 
@@ -110,17 +127,65 @@ class CitaView(ModelView):
         "estado"
     ]
 
+    # ✅ INCLUIR "hora" en add_columns
     add_columns = [
         "paciente",
         "doctor",
         "tratamiento",
         "fecha",
-        "hora",
+        "hora",          # 👈 IMPORTANTE: hora debe estar aquí
         "observacion",
         "estado"
     ]
 
     edit_columns = add_columns
+
+    # Personalizar el widget de hora
+    add_form_extra_fields = {
+        "hora": SelectField(
+            "Horario",
+            choices=obtener_horarios_disponibles(),
+            widget=Select2Widget(),
+            description="Seleccione un horario para la cita"
+        )
+    }
+
+    def pre_add(self, item):
+        """Validar que el horario no esté ocupado"""
+        from sqlalchemy import and_
+        
+        if not item.hora:
+            raise Exception("❌ Debe seleccionar un horario")
+        
+        # Verificar si ya existe una cita con el mismo doctor, fecha y hora
+        cita_existente = self.datamodel.session.query(Cita).filter(
+            and_(
+                Cita.doctor_id == item.doctor_id,
+                Cita.fecha == item.fecha,
+                Cita.hora == item.hora,
+                Cita.estado.in_(['Pendiente', 'Confirmada'])
+            )
+        ).first()
+        
+        if cita_existente:
+            raise Exception(f"❌ El horario {item.hora} ya está OCUPADO para este doctor en la fecha {item.fecha}")
+        
+        # Verificar que el paciente no tenga otra cita el mismo día
+        cita_paciente = self.datamodel.session.query(Cita).filter(
+            and_(
+                Cita.paciente_id == item.paciente_id,
+                Cita.fecha == item.fecha
+            )
+        ).first()
+        
+        if cita_paciente:
+            raise Exception("❌ El paciente ya tiene una cita programada para esta fecha")
+        
+        return item
+
+    def pre_update(self, item):
+        """Misma validación al editar"""
+        return self.pre_add(item)
 
 
 # =========================
@@ -140,7 +205,6 @@ class PagoView(ModelView):
 
     add_columns = [
         "cita",
-        "monto",
         "metodo_pago",
         "observacion",
         "estado"
@@ -161,20 +225,20 @@ class PagoView(ModelView):
         )
     }
 
+    
     def pre_add(self, item):
 
-        if item.cita_id:
+        if not item.cita:
+            raise Exception("Debe seleccionar una cita")
 
-            cita = self.datamodel.session.query(Cita).filter(
-                Cita.id == item.cita_id
-            ).first()
+            # Verificar si la cita tiene tratamiento
+        if not item.cita.tratamiento:
+            raise Exception("La cita no tiene tratamiento asociado")
 
-            if cita and cita.tratamiento:
-                item.monto = cita.tratamiento.precio
+            # Asignar automáticamente el monto
+        item.monto = item.cita.tratamiento.precio
 
-        elif item.cita:
 
-            item.monto = item.cita.tratamiento.precio
 
     def post_add(self, item):
 
