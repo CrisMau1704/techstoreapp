@@ -115,3 +115,7 @@ class Pago(Model):
     
     def __repr__(self):
         return f"Pago {self.id} - {self.monto} Bs."
+    
+# views.py - Actualiza tu DashboardView
+
+

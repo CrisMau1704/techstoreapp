@@ -22,11 +22,13 @@ CSRF_ENABLED = True
 # ------------------------------
 # GLOBALS FOR APP Builder
 # ------------------------------
-# Uncomment to setup Your App name
-# APP_NAME = "My App Name"
+# Setup Your App name
+APP_NAME = "Clínica Dental Sonrisa"
 
-# Uncomment to setup Setup an App icon
-# APP_ICON = "static/img/logo.jpg"
+# Setup an App icon
+# config.py
+APP_ICON = "/static/img/clinica.ico"  # Ruta relativa a static
+APP_ICON_SIZE = "32x32"  # Tamaño del ícono
 
 # ----------------------------------------------------
 # AUTHENTICATION CONFIG
@@ -45,10 +47,10 @@ AUTH_TYPE = AUTH_DB
 # AUTH_ROLE_PUBLIC = 'Public'
 
 # Will allow user self registration
-# AUTH_USER_REGISTRATION = True
+AUTH_USER_REGISTRATION = False
 
 # The default user self registration role
-# AUTH_USER_REGISTRATION_ROLE = "Public"
+AUTH_USER_REGISTRATION_ROLE = "User"
 
 # When using LDAP Auth, setup the ldap server
 # AUTH_LDAP_SERVER = "ldap://ldapserver.new"
@@ -59,13 +61,16 @@ AUTH_TYPE = AUTH_DB
 #    { 'name': 'AOL', 'url': 'http://openid.aol.com/<username>' },
 #    { 'name': 'Flickr', 'url': 'http://www.flickr.com/<username>' },
 #    { 'name': 'MyOpenID', 'url': 'https://www.myopenid.com' }]
+
 # ---------------------------------------------------
 # Babel config for translations
 # ---------------------------------------------------
 # Setup default language
-BABEL_DEFAULT_LOCALE = "en"
+BABEL_DEFAULT_LOCALE = "es"  # Cambiado a español
+
 # Your application default translation path
 BABEL_DEFAULT_FOLDER = "translations"
+
 # The allowed translation for you app
 LANGUAGES = {
     "en": {"flag": "gb", "name": "English"},
@@ -77,6 +82,7 @@ LANGUAGES = {
     "ru": {"flag": "ru", "name": "Russian"},
     "pl": {"flag": "pl", "name": "Polish"},
 }
+
 # ---------------------------------------------------
 # Image and file configuration
 # ---------------------------------------------------
@@ -88,6 +94,7 @@ IMG_UPLOAD_FOLDER = basedir + "/app/static/uploads/"
 
 # The image upload url, when using models with images
 IMG_UPLOAD_URL = "/static/uploads/"
+
 # Setup image size default is (300, 200, True)
 # IMG_SIZE = (300, 200, True)
 
@@ -99,11 +106,28 @@ IMG_UPLOAD_URL = "/static/uploads/"
 # APP_THEME = "amelia.css"
 # APP_THEME = "cosmo.css"
 # APP_THEME = "cyborg.css"
+# APP_THEME = "darkly.css"
 # APP_THEME = "flatly.css"
 # APP_THEME = "journal.css"
-# APP_THEME = "readable.css"
+# APP_THEME = "litera.css"
+# APP_THEME = "lumen.css"
+# APP_THEME = "lux.css"
+# APP_THEME = "materia.css"
+# APP_THEME = "minty.css"
+# APP_THEME = "pulse.css"
+# APP_THEME = "sandstone.css"
 # APP_THEME = "simplex.css"
 # APP_THEME = "slate.css"
+# APP_THEME = "solar.css"
 # APP_THEME = "spacelab.css"
+# APP_THEME = "superhero.css"
 # APP_THEME = "united.css"
 # APP_THEME = "yeti.css"
+
+# ---------------------------------------------------
+# Configuración adicional para templates personalizados
+# ---------------------------------------------------
+TEMPLATES_AUTO_RELOAD = True
+
+# ✅ CORRECTO - Especifica el módulo donde está DashboardView
+# config.py - Agrega esta línea al final del archivo
