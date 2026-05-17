@@ -6,6 +6,9 @@ from sqlalchemy import Boolean, Column, DateTime, Integer, Numeric, String, Fore
 from sqlalchemy.orm import relationship
 from markupsafe import Markup
 from flask import url_for
+from sqlalchemy import Time, Date, UniqueConstraint
+from sqlalchemy import Enum as SQLEnum
+import enum
 
 def get_bolivia_time():
     bolivia_tz = pytz.timezone('America/La_Paz')
@@ -51,7 +54,7 @@ class Tratamiento(Model):
     id = Column(Integer, primary_key=True)
     nombre = Column(String(150), nullable=False)
     descripcion = Column(Text)
-    precio = Column(Float)
+    precio = Column(Float, default=0.0)
     duracion_minutos = Column(Integer)
     estado = Column(Boolean, default=True)
     creado_en = Column(DateTime, default=get_bolivia_time, nullable=False)
@@ -65,4 +68,50 @@ class Tratamiento(Model):
         return self.nombre
 
 
+class EstadoCita(enum.Enum):
+    PENDIENTE = "Pendiente"
+    CONFIRMADA = "Confirmada"
+    COMPLETADA = "Completada"
+    CANCELADA = "Cancelada"
+    NO_ASISTIO = "No Asistió"
 
+class Cita(Model):
+    __tablename__ = "cita"
+    id = Column(Integer, primary_key=True)
+    fecha = Column(Date, nullable=False)
+    hora = Column(String(10), nullable=False)  # String: "14:30"
+    observacion = Column(Text, nullable=True)
+    estado = Column(String(50), default="Pendiente", nullable=False)  # Pendiente, Confirmada, Completada, Cancelada
+    creado_en = Column(DateTime, default=get_bolivia_time, nullable=False)
+    actualizado_en = Column(DateTime, default=get_bolivia_time, onupdate=get_bolivia_time, nullable=False)
+    paciente_id = Column(Integer, ForeignKey("paciente.id"), nullable=False)
+    paciente = relationship("Paciente", backref="citas")
+    doctor_id = Column(Integer, ForeignKey("doctor.id"), nullable=False)
+    doctor = relationship("Doctor", backref="citas")
+    tratamiento_id = Column(Integer, ForeignKey("tratamiento.id"), nullable=False)
+    tratamiento = relationship("Tratamiento", backref="citas")
+    
+    __table_args__ = (
+        UniqueConstraint('doctor_id', 'fecha', 'hora', name='uq_doctor_fecha_hora'),
+    )
+    
+    def __repr__(self):
+        return f"{self.paciente.nombre_completo} - {self.fecha} {self.hora}"
+
+
+class Pago(Model):
+    __tablename__ = "pago"
+    
+    id = Column(Integer, primary_key=True)
+    monto = Column(Float, nullable=False)
+    metodo_pago = Column(String(50), nullable=False)  # Efectivo, Tarjeta, Transferencia
+    observacion = Column(Text, nullable=True)
+    estado = Column(Boolean, default=True)  # True = Pagado, False = Anulado
+    creado_en = Column(DateTime, default=get_bolivia_time, nullable=False)
+    actualizado_en = Column(DateTime, default=get_bolivia_time, onupdate=get_bolivia_time, nullable=False)
+    
+    cita_id = Column(Integer, ForeignKey("cita.id"), nullable=False, unique=True)
+    cita = relationship("Cita", backref="pago", uselist=False)
+    
+    def __repr__(self):
+        return f"Pago {self.id} - {self.monto} Bs."
