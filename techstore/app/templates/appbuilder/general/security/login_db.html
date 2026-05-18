@@ -1,0 +1,543 @@
+{% extends "appbuilder/base.html" %}
+
+{% block content %}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+        font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Fondo decorativo animado con burbujas */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.12) 0%, transparent 50%),
+            repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 8px);
+        pointer-events: none;
+    }
+
+    /* Ocultar elementos de Flask-AppBuilder */
+    .navbar, footer, .navbar-brand, .nav, .navbar-nav {
+        display: none !important;
+    }
+
+    /* Contenedor principal */
+    .login-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Tarjeta principal */
+    .login-card {
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        border-radius: 32px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        max-width: 460px;
+        width: 100%;
+        transition: all 0.3s ease;
+        animation: slideUp 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .login-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Encabezado */
+    .card-header {
+        background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+        padding: 45px 30px;
+        text-align: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-header::before {
+        content: '🦷';
+        position: absolute;
+        font-size: 120px;
+        opacity: 0.1;
+        right: -20px;
+        bottom: -30px;
+        transform: rotate(-15deg);
+        pointer-events: none;
+    }
+
+    .logo-container {
+        width: 85px;
+        height: 85px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        animation: pulse 2s infinite;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover {
+        transform: scale(1.05);
+    }
+
+    .logo-icon {
+        font-size: 48px;
+        filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+    }
+
+    .card-header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+    }
+
+    .card-header p {
+        font-size: 14px;
+        opacity: 0.95;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    /* Cuerpo del formulario */
+    .card-body {
+        padding: 40px 35px;
+        background: white;
+    }
+
+    /* Grupos de formulario */
+    .form-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .input-icon {
+        position: relative;
+    }
+
+    .input-icon i {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 18px;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        z-index: 1;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 14px 15px 14px 48px;
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        background: #ffffff;
+        font-family: inherit;
+    }
+
+    .form-control:hover {
+        border-color: #cbd5e1;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #14b8a6;
+        box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1);
+    }
+
+    .form-control:focus + i {
+        color: #14b8a6;
+    }
+
+    /* Opciones adicionales */
+    .form-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+        font-size: 13px;
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        color: #475569;
+        transition: color 0.3s ease;
+    }
+
+    .checkbox-label:hover {
+        color: #0d9488;
+    }
+
+    .checkbox-label input {
+        margin-right: 8px;
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        accent-color: #14b8a6;
+    }
+
+    .forgot-link {
+        color: #14b8a6;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .forgot-link:hover {
+        color: #0d9488;
+        text-decoration: underline;
+    }
+
+    /* Botón principal */
+    .btn-login {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+        color: white;
+        border: none;
+        border-radius: 16px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-login::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-login:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.4);
+    }
+
+    .btn-login:active {
+        transform: translateY(0);
+    }
+
+    /* Pie de página */
+    .card-footer {
+        background: #f8fafc;
+        padding: 20px 35px;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .card-footer p {
+        color: #64748b;
+        font-size: 13px;
+        margin: 0;
+    }
+
+    /* Mensajes de error */
+    .alert {
+        padding: 12px 15px;
+        border-radius: 14px;
+        margin-bottom: 25px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: shake 0.5s ease;
+    }
+
+    .alert-danger {
+        background: #fef2f2;
+        color: #dc2626;
+        border-left: 4px solid #ef4444;
+    }
+
+    .alert-success {
+        background: #f0fdf4;
+        color: #16a34a;
+        border-left: 4px solid #22c55e;
+    }
+
+    /* Animaciones */
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.08);
+        }
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    /* Responsive */
+    @media (max-width: 576px) {
+        .card-header {
+            padding: 35px 20px;
+        }
+        
+        .card-body {
+            padding: 30px 25px;
+        }
+        
+        .card-footer {
+            padding: 15px 25px;
+        }
+        
+        .logo-container {
+            width: 65px;
+            height: 65px;
+        }
+        
+        .logo-icon {
+            font-size: 38px;
+        }
+        
+        .card-header h1 {
+            font-size: 24px;
+        }
+        
+        .card-header p {
+            font-size: 12px;
+        }
+        
+        .form-options {
+            font-size: 12px;
+        }
+        
+        .btn-login {
+            padding: 13px;
+            font-size: 15px;
+        }
+    }
+
+    /* Efecto de carga para el botón */
+    .btn-login.loading {
+        pointer-events: none;
+        opacity: 0.8;
+    }
+
+    .btn-login.loading::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 50%;
+        left: 50%;
+        margin-left: -10px;
+        margin-top: -10px;
+        border: 2px solid white;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Estilo para el botón de mostrar contraseña */
+    .toggle-password {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #94a3b8;
+        z-index: 10;
+        transition: color 0.3s ease;
+    }
+
+    .toggle-password:hover {
+        color: #14b8a6;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="login-wrapper">
+    <div class="login-card">
+        <div class="card-header">
+            <div class="logo-container">
+                <div class="logo-icon">🦷</div>
+            </div>
+            <h1>Clínica Dental Sonrisa</h1>
+            <p>Sistema Integral de Gestión Odontológica</p>
+        </div>
+
+        <div class="card-body">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <i class="fas fa-{% if category == 'danger' %}exclamation-circle{% else %}check-circle{% endif %}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" id="loginForm">
+                {{ form.hidden_tag() }}
+
+                <div class="form-group">
+                    <div class="input-icon">
+                        {{ form.username(class="form-control", placeholder="Usuario o correo electrónico", id="username", autocomplete="off") }}
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-icon">
+                        {{ form.password(class="form-control", placeholder="Contraseña", id="password") }}
+                        <i class="fas fa-lock"></i>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember"> Recordarme en este equipo
+                    </label>
+                    <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <i class="fas fa-sign-in-alt" style="margin-right: 10px;"></i>
+                    Ingresar al Sistema
+                </button>
+            </form>
+        </div>
+
+        <div class="card-footer">
+            <p>
+                <i class="fas fa-shield-alt" style="margin-right: 5px;"></i> 
+                Sistema seguro · Soporte 24/7
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Prevenir envío múltiple del formulario
+    const loginForm = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    
+    loginForm.addEventListener('submit', function(e) {
+        loginBtn.classList.add('loading');
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Ingresando...';
+        
+        setTimeout(() => {
+            if (!this.submitted) {
+                this.submitted = true;
+                return true;
+            }
+            e.preventDefault();
+            return false;
+        }, 100);
+    });
+
+    // Efecto de mostrar/ocultar contraseña mejorado
+    const passwordInput = document.getElementById('password');
+    if (passwordInput) {
+        const togglePassword = document.createElement('i');
+        togglePassword.className = 'fas fa-eye toggle-password';
+        
+        const parentDiv = passwordInput.parentElement;
+        parentDiv.style.position = 'relative';
+        parentDiv.appendChild(togglePassword);
+        
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
+
+    // Recordar usuario (localStorage)
+    const rememberCheckbox = document.getElementById('remember');
+    const usernameInput = document.getElementById('username');
+    
+    if (localStorage.getItem('rememberedUser')) {
+        usernameInput.value = localStorage.getItem('rememberedUser');
+        rememberCheckbox.checked = true;
+    }
+    
+    rememberCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            localStorage.setItem('rememberedUser', usernameInput.value);
+        } else {
+            localStorage.removeItem('rememberedUser');
+        }
+    });
+    
+    // Efecto de guardado automático del usuario mientras se escribe (si está marcado recordar)
+    usernameInput.addEventListener('input', function() {
+        if (rememberCheckbox.checked) {
+            localStorage.setItem('rememberedUser', this.value);
+        }
+    });
+    
+    // Limpiar formulario al recargar si no hay recordar
+    if (!localStorage.getItem('rememberedUser')) {
+        usernameInput.value = '';
+    }
+</script>
+
+{% endblock %}
