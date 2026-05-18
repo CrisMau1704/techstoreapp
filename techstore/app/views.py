@@ -41,6 +41,7 @@ from flask_appbuilder import ModelView
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_appbuilder.filemanager import ImageManager
 
+
 from .models import Paciente
 from . import appbuilder
 
@@ -68,7 +69,7 @@ class CitaView(ModelView):
     edit_columns = add_columns
     show_columns = ["fecha", "hora", "paciente", "doctor", "tratamiento", "observacion", "estado", "creado_en", "actualizado_en"]
 
-
+  
 class PagoView(ModelView):
     datamodel = SQLAInterface(Pago)
     list_columns = ["monto", "metodo_pago", "cita", "estado"]

@@ -10,6 +10,7 @@ from sqlalchemy import Time, Date, UniqueConstraint
 from sqlalchemy import Enum as SQLEnum
 import enum
 
+
 def get_bolivia_time():
     bolivia_tz = pytz.timezone('America/La_Paz')
     return datetime.datetime.now(bolivia_tz)
@@ -41,6 +42,8 @@ class Doctor(Model):
     estado = Column(Boolean, default=True)
     creado_en = Column(DateTime, default=get_bolivia_time, nullable=False)
     actualizado_en = Column(DateTime, default=get_bolivia_time, onupdate=get_bolivia_time, nullable=False)
+
+ 
 
     def __repr__(self):
         return self.nombre_completo
