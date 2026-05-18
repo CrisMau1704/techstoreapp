@@ -3,6 +3,8 @@ from flask_appbuilder import AppBuilder, expose
 from flask_sqlalchemy import SQLAlchemy
 from flask_appbuilder.security.views import AuthDBView
 
+
+
 db = SQLAlchemy()
 appbuilder = AppBuilder()
 
@@ -20,6 +22,7 @@ def create_app() -> Flask:
     db.init_app(app)
 
     with app.app_context():
+
 
         # IMPORTAR MODELOS
         from .models import (
