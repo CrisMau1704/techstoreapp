@@ -1,6 +1,7 @@
-from flask_appbuilder import ModelView
+from flask_appbuilder import ModelView, BaseView, expose
+from app.extensions import db
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from .models import Doctor, Tratamiento
+from .models import Doctor, Tratamiento, Cita, Pago
 from . import appbuilder
 from flask_appbuilder.fieldwidgets import Select2Widget
 from wtforms import SelectField
@@ -420,13 +421,6 @@ appbuilder.add_view(
     category="Dashboard"
 )
 
-appbuilder.add_view(
-    PacienteModelView,
-    "Pacientes",
-    icon="fa-users",
-    category="Gestión Médica",
-    category_icon="fa-hospital-o"
-)
 
 appbuilder.add_view(
     DoctorView,
@@ -459,13 +453,15 @@ class PacienteModelView(ModelView):
     edit_columns = ["nombre_completo", "ci", "telefono", "edad", "direccion", "correo", "estado"]
     show_columns = ["nombre_completo", "ci", "telefono", "edad", "direccion", "correo", "estado", "creado_en", "actualizado_en"]
 
+   
+
 appbuilder.add_view(
     PacienteModelView,
     "Pacientes",
-    icon="wheelchair-alt",
-    category="Paciente",
-    # category_icon="fa-cogs"
-)    
+    icon="fa-users",
+    category="Gestión Médica",
+    category_icon="fa-hospital-o"
+)
 
 from .models import Cita, Pago
 
@@ -496,8 +492,7 @@ appbuilder.add_view(
     PagoView,
     "Pagos",
     icon="fa-money",
-    category="Gestión"
-    icon="fa-credit-card",
+    # icon="fa-credit-card",
     category="Administración",
     category_icon="fa-money"
 )
