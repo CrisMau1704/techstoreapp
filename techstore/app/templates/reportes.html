@@ -1,0 +1,119 @@
+{% extends "appbuilder/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <h2>Reportes</h2>
+
+    <form method="POST">
+
+        <div class="row">
+
+            <div class="col-md-3">
+                <label>Fecha Inicio</label>
+                <input type="date" name="fecha_inicio" class="form-control">
+            </div>
+
+            <div class="col-md-3">
+                <label>Fecha Fin</label>
+                <input type="date" name="fecha_fin" class="form-control">
+            </div>
+
+            <div class="col-md-3">
+                <label>Método Pago</label>
+
+                <select name="metodo_pago" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Tarjeta">Tarjeta</option>
+                    <option value="Transferencia">Transferencia</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label>Tratamiento</label>
+
+                <select name="tratamiento_id" class="form-control">
+                    <option value="">Todos</option>
+
+                    {% for t in tratamientos %}
+                        <option value="{{ t.id }}">
+                            {{ t.nombre }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+
+        </div>
+
+        <br>
+
+        <button class="btn btn-primary">
+            Buscar
+        </button>
+
+    </form>
+
+    <hr>
+
+    <h4>
+        Total Ingresos:
+        Bs. {{ total_ingresos }}
+    </h4>
+
+    <table class="table table-bordered">
+
+        <thead>
+            <tr>
+                <th>Paciente</th>
+                <th>Doctor</th>
+                <th>Tratamiento</th>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Método</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for pago in pagos %}
+
+            <tr>
+
+                <td>
+                    {{ pago.cita.paciente.nombre_completo }}
+                </td>
+
+                <td>
+                    {{ pago.cita.doctor.nombre_completo }}
+                </td>
+
+                <td>
+                    {{ pago.cita.tratamiento.nombre }}
+                </td>
+
+                <td>
+                    {{ pago.cita.fecha }}
+                </td>
+
+                <td>
+                    Bs. {{ pago.monto }}
+                </td>
+
+                <td>
+                    {{ pago.metodo_pago }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}
