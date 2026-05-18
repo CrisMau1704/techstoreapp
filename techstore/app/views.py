@@ -4,6 +4,8 @@ from flask_appbuilder.fieldwidgets import Select2Widget
 from wtforms import SelectField
 from sqlalchemy import func, extract
 from datetime import datetime
+from flask import request
+from sqlalchemy import and_
 
 from .models import Paciente, Doctor, Tratamiento, Cita, Pago, EstadoCita
 from . import appbuilder, db
@@ -410,9 +412,78 @@ class DashboardView(BaseView):
         )
 
 
+class ReporteView(BaseView):
+
+    route_base = "/reportes"
+    default_view = "index"
+
+    @expose("/", methods=["GET", "POST"])
+    def index(self):
+
+        pagos = []
+        total_ingresos = 0
+
+        fecha_inicio = request.form.get("fecha_inicio")
+        fecha_fin = request.form.get("fecha_fin")
+        metodo_pago = request.form.get("metodo_pago")
+        tratamiento_id = request.form.get("tratamiento_id")
+
+        query = db.session.query(Pago).join(Cita).join(Tratamiento)
+
+        # =========================
+        # FILTRO POR FECHAS
+        # =========================
+
+        if fecha_inicio and fecha_fin:
+            query = query.filter(
+                Cita.fecha.between(fecha_inicio, fecha_fin)
+            )
+
+        # =========================
+        # FILTRO POR MÉTODO DE PAGO
+        # =========================
+
+        if metodo_pago and metodo_pago != "":
+            query = query.filter(
+                Pago.metodo_pago == metodo_pago
+            )
+
+        # =========================
+        # FILTRO POR TRATAMIENTO
+        # =========================
+
+        if tratamiento_id and tratamiento_id != "":
+            query = query.filter(
+                Tratamiento.id == tratamiento_id
+            )
+
+        pagos = query.all()
+
+        # =========================
+        # TOTAL INGRESOS
+        # =========================
+
+        total_ingresos = sum(pago.monto for pago in pagos)
+
+        tratamientos = db.session.query(Tratamiento).all()
+
+        return self.render_template(
+            "reportes.html",
+            pagos=pagos,
+            total_ingresos=total_ingresos,
+            tratamientos=tratamientos
+        )
+
 # =========================
 # GESTIÓN MÉDICA
 # =========================
+
+appbuilder.add_view(
+    DashboardView,
+    "Dashboard",
+    icon="fa-bar-chart",
+    category="Dashboard"
+)
 
 appbuilder.add_view(
     PacienteModelView,
@@ -460,10 +531,11 @@ appbuilder.add_view(
 # =========================
 
 appbuilder.add_view(
-    DashboardView,
+    ReporteView,
     "Reportes",
-    icon="fa-bar-chart",
-    category="Administración"
+    icon="fa-file-text",
+    category="Reportes",
+    category_icon="fa-bar-chart"
 )
 
 
