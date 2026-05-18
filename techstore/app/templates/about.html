@@ -1,0 +1,72 @@
+{% extends "appbuilder/base.html" %}
+
+{% block content %}
+<div class="container" style="padding: 30px;">
+    <div style="max-width: 900px; margin: auto; background: white; border-radius: 18px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); padding: 35px;">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; margin-bottom: 30px;">
+            <img src="../static/img/logo.jpg" alt="Perfil de programador" style="width: 180px; height: 180px; border-radius: 18px; object-fit: cover; box-shadow: 0 8px 24px rgba(0,0,0,0.12);">
+            <div style="flex: 1; min-width: 240px;">
+                <h1 style="margin: 0 0 12px; font-size: 2.2rem;">Cristian Illanes<br>Jhoselin Limachi<br>Jean Luque</h1>
+                <p style="margin: 0 0 8px; color: #4b5563; font-size: 1rem;">Desarrolladores full-stack especializado en aplicaciones web con Flask, Python y arquitecturas modernas.</p>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
+                    <span style="background: #e0f2fe; color: #0369a1; padding: 8px 14px; border-radius: 999px; font-size: 0.94rem;">Flask</span>
+                    <span style="background: #d1fae5; color: #065f46; padding: 8px 14px; border-radius: 999px; font-size: 0.94rem;">Python</span>
+                    <span style="background: #fee2e2; color: #b91c1c; padding: 8px 14px; border-radius: 999px; font-size: 0.94rem;">MySql</span>
+                </div>
+            </div>
+        </div>
+
+        <section style="margin-bottom: 28px;">
+            <h2 style="margin-bottom: 14px; font-size: 1.6rem; color: #111827;">Resumen profesional</h2>
+            <p style="margin: 0; color: #4b5563; line-height: 1.75;">Programadores apasionados por construir soluciones limpias y escalables. Combinando buenas prácticas de ingeniería de software con una fuerte orientación a la experiencia del usuario y la eficiencia en el desarrollo.</p>
+        </section>
+
+        <section style="display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-bottom: 28px;">
+            <div style="background: #f8fafc; padding: 22px; border-radius: 16px;">
+                <h3 style="margin-bottom: 12px; font-size: 1.1rem; color: #0f172a;">Experiencia</h3>
+                <ul style="margin: 0; padding-left: 20px; color: #4b5563; line-height: 1.8;">
+                    <li>Desarrollo de paneles administrativos con Flask-AppBuilder.</li>
+                    <li>Integración de sistemas con APIs externas y autenticación segura.</li>
+                    <li>Modelado de bases de datos relacionales con SQLAlchemy.</li>
+                </ul>
+            </div>
+            <div style="background: #f8fafc; padding: 22px; border-radius: 16px;">
+                <h3 style="margin-bottom: 12px; font-size: 1.1rem; color: #0f172a;">Habilidades</h3>
+                <ul style="margin: 0; padding-left: 20px; color: #4b5563; line-height: 1.8;">
+                    <li>Flask, Flask-AppBuilder, Jinja2</li>
+                    <li>Python, Git</li>
+                    <li>HTML, CSS, JavaScript, REST APIs</li>
+                </ul>
+            </div>
+        </section>
+
+        <section style="margin-bottom: 28px;">
+            <h2 style="margin-bottom: 14px; font-size: 1.6rem; color: #111827;">Proyectos destacados</h2>
+            <div style="display: grid; gap: 18px;">
+                <article style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 18px;">
+                    <strong>Clinica dental</strong>
+                    <p style="margin: 8px 0 0; color: #4b5563;">Sistema administrativo médico con panel de control, gestión de pacientes, citas y pagos.</p>
+                </article>
+                <article style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 18px;">
+                    <strong>TechStore</strong>
+                    <p style="margin: 8px 0 0; color: #4b5563;">Venta de productos tecnológicos y el soporte al cliente.</p>
+                </article>
+            </div>
+        </section>
+
+        <section style="display: flex; flex-wrap: wrap; gap: 18px;">
+            <div style="flex: 1; min-width: 220px; background: #ecfdf5; padding: 20px; border-radius: 16px;">
+                <h3 style="margin-bottom: 12px; font-size: 1.1rem; color: #065f46;">Contacto</h3>
+                <p style="margin: 0; color: #234e52;">Correos: cristian.illanes@example.com</p>
+                <p style="margin: 0; color: #234e52;">Correos: jhoselin.limachi@example.com</p>
+                <p style="margin: 0; color: #234e52;">Correos: jean.luque@example.com</p>
+                <p style="margin: 4px 0 0; color: #234e52;">LinkedIn: linkedin.com/in/ejemplos</p>
+            </div>
+            <div style="flex: 1; min-width: 220px; background: #f0f9ff; padding: 20px; border-radius: 16px;">
+                <h3 style="margin-bottom: 12px; font-size: 1.1rem; color: #0c4a6e;">Objetivo</h3>
+                <p style="margin: 0; color: #334155; line-height: 1.7;">Crear aplicaciones robustas y fáciles de mantener, con foco en calidad, seguridad y buenas prácticas.</p>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
