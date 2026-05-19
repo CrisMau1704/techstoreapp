@@ -1,12 +1,8 @@
 from flask import Flask, redirect
-from flask_appbuilder import AppBuilder, expose
-from flask_sqlalchemy import SQLAlchemy
+from flask_appbuilder import expose
 from flask_appbuilder.security.views import AuthDBView
 
-
-
-db = SQLAlchemy()
-appbuilder = AppBuilder()
+from .extensions import db, appbuilder
 
 
 def create_app() -> Flask:
@@ -15,9 +11,6 @@ def create_app() -> Flask:
 
     app.config.from_object("config")
 
-    # =========================
-    # INICIALIZAR DB
-    # =========================
 
     db.init_app(app)
 
@@ -103,15 +96,7 @@ def create_app() -> Flask:
 
         appbuilder.indexview = views.DashboardView()
 
-        # =========================
-        # RUTA PRINCIPAL
-        # =========================
-
        
-
-        # =========================
-        # LOGOUT
-        # =========================
 
         app.config['LOGOUT_REDIRECT_URL'] = '/login'
 

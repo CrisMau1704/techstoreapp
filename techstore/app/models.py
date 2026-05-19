@@ -49,7 +49,7 @@ class Doctor(Model):
         return self.nombre_completo
 
 
-# from sqlalchemy import Float, Text
+
 
 class Tratamiento(Model):
     __tablename__ = "tratamiento"  # 🔹 Nombre de la tabla en la BD
@@ -82,15 +82,18 @@ class Cita(Model):
     __tablename__ = "cita"
     id = Column(Integer, primary_key=True)
     fecha = Column(Date, nullable=False)
-    hora = Column(String(10), nullable=False)  # String: "14:30"
+    hora = Column(String(10), nullable=False)  
     observacion = Column(Text, nullable=True)
-    estado = Column(String(50), default="Pendiente", nullable=False)  # Pendiente, Confirmada, Completada, Cancelada
+    estado = Column(String(50), default="Pendiente", nullable=False)  
     creado_en = Column(DateTime, default=get_bolivia_time, nullable=False)
     actualizado_en = Column(DateTime, default=get_bolivia_time, onupdate=get_bolivia_time, nullable=False)
+
     paciente_id = Column(Integer, ForeignKey("paciente.id"), nullable=False)
     paciente = relationship("Paciente", backref="citas")
+
     doctor_id = Column(Integer, ForeignKey("doctor.id"), nullable=False)
     doctor = relationship("Doctor", backref="citas")
+
     tratamiento_id = Column(Integer, ForeignKey("tratamiento.id"), nullable=False)
     tratamiento = relationship("Tratamiento", backref="citas")
     

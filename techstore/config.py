@@ -131,3 +131,5 @@ TEMPLATES_AUTO_RELOAD = True
 
 # ✅ CORRECTO - Especifica el módulo donde está DashboardView
 # config.py - Agrega esta línea al final del archivo
+
+
